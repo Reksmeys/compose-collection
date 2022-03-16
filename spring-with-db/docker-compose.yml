@@ -1,0 +1,25 @@
+version: "3"
+services:
+ my_db_service:
+ image: postgres
+ container_name: teacher_database
+ ports:
+ - "5432:5432"
+ restart: always
+ environment:
+ POSTGRES_USER: "postgres"
+ POSTGRES_PASSWORD: "postgres"
+ POSTGRES_DB: "testing"
+ spring-service:
+ depends_on:
+ - my_db_service
+ image: spring-img
+ports:
+ - "8080:8080"
+links:
+ - my_db_service
+healthcheck:
+ test: ["CMD", "curl", "-f", "http://localhost"]
+ interval: 40s
+ timeout: 10s
+ retries: 3 
